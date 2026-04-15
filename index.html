@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Automyx — AI Automation for Delhi Businesses</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #080B10;
+      --bg2:       #0D1117;
+      --bg3:       #111820;
+      --card:      #111820;
+      --border:    rgba(255,255,255,0.07);
+      --blue:      #3B82F6;
+      --blue-dim:  rgba(59,130,246,0.12);
+      --blue-glow: rgba(59,130,246,0.25);
+      --cyan:      #22D3EE;
+      --white:     #F8FAFC;
+      --muted:     #94A3B8;
+      --faint:     #1E2A3A;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.028;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%;
+      height: 68px;
+      background: rgba(8,11,16,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 1.25rem;
+      color: var(--white); letter-spacing: -0.02em;
+    }
+    .nav-logo span { color: var(--blue); }
+
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.875rem; font-weight: 400;
+      color: var(--muted); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-cta {
+      background: var(--blue); color: #fff;
+      border: none; padding: 0.55rem 1.25rem;
+      border-radius: 6px; font-size: 0.875rem; font-weight: 500;
+      cursor: pointer; text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+
+    /* ── HERO ── */
+    #hero {
+      position: relative; min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 120px 5% 80px;
+      overflow: hidden;
+    }
+
+    /* Radial glow behind hero */
+    #hero::after {
+      content: '';
+      position: absolute;
+      top: 10%; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 500px;
+      background: radial-gradient(ellipse at center, rgba(59,130,246,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Animated grid */
+    .grid-bg {
+      position: absolute; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(59,130,246,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 100%);
+    }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--blue-dim); border: 1px solid rgba(59,130,246,0.3);
+      border-radius: 100px; padding: 0.35rem 1rem;
+      font-size: 0.8rem; color: var(--blue); font-weight: 500;
+      margin-bottom: 2rem; position: relative; z-index: 1;
+      animation: fadeUp 0.7s ease both;
+    }
+    .hero-badge .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--blue);
+      animation: pulse 2s infinite;
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 800; line-height: 1.05;
+      letter-spacing: -0.03em;
+      position: relative; z-index: 1;
+      animation: fadeUp 0.7s 0.1s ease both;
+    }
+    h1 .accent { color: var(--blue); }
+    h1 .dim { color: var(--muted); }
+
+    .hero-sub {
+      max-width: 560px; margin: 1.5rem auto 0;
+      font-size: 1.1rem; color: var(--muted); line-height: 1.7;
+      font-weight: 300; position: relative; z-index: 1;
+      animation: fadeUp 0.7s 0.2s ease both;
+    }
+
+    .hero-btns {
+      display: flex; gap: 1rem; justify-content: center;
+      flex-wrap: wrap; margin-top: 2.5rem;
+      position: relative; z-index: 1;
+      animation: fadeUp 0.7s 0.3s ease both;
+    }
+
+    .btn-primary {
+      background: var(--blue); color: #fff;
+      border: none; padding: 0.8rem 2rem;
+      border-radius: 8px; font-size: 0.95rem; font-weight: 500;
+      cursor: pointer; text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 24px rgba(59,130,246,0.35);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 36px rgba(59,130,246,0.5); }
+
+    .btn-ghost {
+      background: transparent; color: var(--white);
+      border: 1px solid var(--border); padding: 0.8rem 2rem;
+      border-radius: 8px; font-size: 0.95rem; font-weight: 400;
+      cursor: pointer; text-decoration: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.25); background: rgba(255,255,255,0.04); }
+
+    /* Stats bar */
+    .stats-bar {
+      display: flex; gap: 3rem; justify-content: center;
+      margin-top: 5rem; position: relative; z-index: 1;
+      animation: fadeUp 0.7s 0.4s ease both;
+      flex-wrap: wrap;
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem; font-weight: 800; color: var(--white);
+    }
+    .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* ── SECTIONS SHARED ── */
+    section { position: relative; z-index: 1; }
+
+    .section-inner { max-width: 1100px; margin: 0 auto; padding: 100px 5%; }
+
+    .section-tag {
+      display: inline-block;
+      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.12em;
+      color: var(--blue); text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700; line-height: 1.15;
+      letter-spacing: -0.02em; color: var(--white);
+      margin-bottom: 1rem;
+    }
+
+    .section-sub {
+      font-size: 1rem; color: var(--muted); max-width: 500px;
+      line-height: 1.7; font-weight: 300;
+    }
+
+    /* ── SERVICES ── */
+    #services { background: var(--bg2); }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5px;
+      margin-top: 4rem;
+      border: 1.5px solid var(--border);
+      border-radius: 16px; overflow: hidden;
+    }
+
+    .service-card {
+      background: var(--card);
+      padding: 2.5rem 2rem;
+      transition: background 0.25s;
+      position: relative;
+    }
+    .service-card:hover { background: #151F2E; }
+
+    .service-icon {
+      width: 48px; height: 48px; border-radius: 10px;
+      background: var(--blue-dim); border: 1px solid rgba(59,130,246,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; margin-bottom: 1.5rem;
+    }
+
+    .service-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem;
+    }
+
+    .service-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+
+    .service-tag {
+      display: inline-block; margin-top: 1.2rem;
+      font-size: 0.72rem; font-weight: 500;
+      color: var(--blue); background: var(--blue-dim);
+      border: 1px solid rgba(59,130,246,0.2);
+      border-radius: 4px; padding: 0.2rem 0.6rem;
+    }
+
+    /* ── HOW IT WORKS ── */
+    #howitworks { background: var(--bg); }
+
+    .steps-wrap {
+      margin-top: 4rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .step {
+      display: flex; gap: 1.5rem; align-items: flex-start;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px; padding: 2rem;
+      transition: border-color 0.25s;
+    }
+    .step:hover { border-color: rgba(59,130,246,0.3); }
+
+    .step-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem; font-weight: 800;
+      color: var(--blue); opacity: 0.35;
+      line-height: 1; flex-shrink: 0;
+      min-width: 44px;
+    }
+
+    .step h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem;
+    }
+    .step p { font-size: 0.875rem; color: var(--muted); line-height: 1.7; }
+
+    /* flow arrow */
+    .flow-diagram {
+      grid-column: 1 / -1;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 14px; padding: 2rem;
+      overflow-x: auto;
+    }
+
+    .flow {
+      display: flex; align-items: center; gap: 0;
+      min-width: 600px;
+    }
+
+    .flow-node {
+      flex: 1; text-align: center;
+      background: var(--card); border: 1px solid rgba(59,130,246,0.2);
+      border-radius: 10px; padding: 1rem 0.75rem;
+    }
+    .flow-node .fn-icon { font-size: 1.4rem; margin-bottom: 0.4rem; }
+    .flow-node .fn-label { font-size: 0.7rem; color: var(--muted); font-weight: 500; }
+    .flow-node .fn-title { font-size: 0.8rem; font-weight: 600; margin-top: 0.15rem; }
+
+    .flow-arrow {
+      color: var(--blue); font-size: 1.2rem;
+      padding: 0 0.5rem; opacity: 0.6; flex-shrink: 0;
+    }
+
+    /* ── PRICING ── */
+    #pricing { background: var(--bg2); }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 4rem;
+    }
+
+    .pricing-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 2.5rem 2rem;
+      position: relative; overflow: hidden;
+      transition: transform 0.25s, border-color 0.25s;
+    }
+    .pricing-card:hover { transform: translateY(-4px); }
+    .pricing-card.featured {
+      border-color: rgba(59,130,246,0.5);
+      background: linear-gradient(135deg, #111820, #0F1E30);
+    }
+    .pricing-card.featured::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
+    }
+
+    .plan-badge {
+      display: inline-block; font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: #fff; background: var(--blue);
+      border-radius: 4px; padding: 0.2rem 0.6rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .plan-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem;
+    }
+
+    .plan-price {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.5rem; font-weight: 800; color: var(--white);
+      margin: 1.25rem 0 0.25rem;
+    }
+    .plan-price span { font-size: 1rem; font-weight: 400; color: var(--muted); }
+
+    .plan-desc { font-size: 0.875rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
+
+    .plan-features { list-style: none; margin-bottom: 2rem; }
+    .plan-features li {
+      font-size: 0.875rem; color: var(--muted);
+      padding: 0.5rem 0; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .plan-features li:last-child { border-bottom: none; }
+    .plan-features li::before { content: '✓'; color: var(--blue); font-weight: 700; flex-shrink: 0; }
+
+    .plan-btn {
+      display: block; width: 100%; text-align: center;
+      padding: 0.8rem; border-radius: 8px;
+      font-size: 0.9rem; font-weight: 500; cursor: pointer;
+      text-decoration: none; transition: all 0.2s;
+    }
+    .plan-btn.primary { background: var(--blue); color: #fff; border: none; }
+    .plan-btn.primary:hover { box-shadow: 0 0 24px rgba(59,130,246,0.4); }
+    .plan-btn.ghost { background: transparent; color: var(--white); border: 1px solid var(--border); }
+    .plan-btn.ghost:hover { border-color: rgba(255,255,255,0.25); background: rgba(255,255,255,0.04); }
+
+    /* ── CONTACT ── */
+    #contact { background: var(--bg); }
+
+    .contact-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 4rem; align-items: start;
+    }
+
+    .contact-info h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 700; letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    .contact-info p { font-size: 0.95rem; color: var(--muted); line-height: 1.8; margin-bottom: 2.5rem; }
+
+    .contact-detail {
+      display: flex; align-items: center; gap: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    .contact-detail .icon {
+      width: 38px; height: 38px; border-radius: 8px;
+      background: var(--blue-dim); border: 1px solid rgba(59,130,246,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; flex-shrink: 0;
+    }
+    .contact-detail .cd-text { font-size: 0.875rem; color: var(--muted); }
+    .contact-detail .cd-val { font-size: 0.9rem; color: var(--white); font-weight: 500; }
+
+    .contact-form {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 2.5rem;
+    }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label {
+      display: block; font-size: 0.8rem; font-weight: 500;
+      color: var(--muted); margin-bottom: 0.5rem; letter-spacing: 0.03em;
+    }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; background: var(--bg);
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 0.75rem 1rem; color: var(--white);
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+      outline: none; transition: border-color 0.2s;
+      appearance: none;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      border-color: rgba(59,130,246,0.5);
+    }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+
+    .submit-btn {
+      width: 100%; background: var(--blue); color: #fff;
+      border: none; border-radius: 8px; padding: 0.9rem;
+      font-size: 0.95rem; font-weight: 500; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .submit-btn:hover { box-shadow: 0 0 28px rgba(59,130,246,0.4); transform: translateY(-1px); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 5%;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+
+    .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 1.1rem; color: var(--white);
+    }
+    .footer-logo span { color: var(--blue); }
+
+    footer p { font-size: 0.8rem; color: var(--muted); }
+
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { font-size: 0.8rem; color: var(--muted); text-decoration: none; }
+    .footer-links a:hover { color: var(--white); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .steps-wrap { grid-template-columns: 1fr; }
+      .contact-wrap { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .stats-bar { gap: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Auto<span>myx</span></div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#howitworks">How It Works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Get a Free Audit →</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="grid-bg"></div>
+
+  <div class="hero-badge">
+    <span class="dot"></span>
+    Now serving Delhi businesses
+  </div>
+
+  <h1>
+    Stop doing things<br>
+    <span class="dim">a</span> <span class="accent">machine</span> can do.
+  </h1>
+
+  <p class="hero-sub">
+    Automyx builds AI-powered automation workflows for small businesses in Delhi —
+    so you can focus on growing, not grinding.
+  </p>
+
+  <div class="hero-btns">
+    <a href="#contact" class="btn-primary">Get a Free Audit</a>
+    <a href="#howitworks" class="btn-ghost">See How It Works</a>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-num">3+</div>
+      <div class="stat-label">Automations Built</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">2 hrs</div>
+      <div class="stat-label">Saved Per Day, Per Client</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Handed Over & Documented</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">Delhi</div>
+      <div class="stat-label">Based & Trusted</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-tag">What We Do</div>
+      <h2 class="section-title">Automation that actually<br>runs your business.</h2>
+      <p class="section-sub">We design, build, and hand over no-code AI workflows inside your own tools — no subscriptions, no lock-in.</p>
+    </div>
+
+    <div class="services-grid reveal">
+      <div class="service-card">
+        <div class="service-icon">🎯</div>
+        <h3>Lead Capture & CRM Automation</h3>
+        <p>Form submission → Google Sheets → AI-generated lead summary → instant Gmail alert. Never miss a lead again.</p>
+        <span class="service-tag">Zapier · Google Sheets · AI</span>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">📄</div>
+        <h3>Invoice & Follow-Up Automation</h3>
+        <p>Order form → AI-drafted invoice → auto Gmail delivery → 3-day delay → follow-up email. Zero manual chasing.</p>
+        <span class="service-tag">Zapier · Gmail · AI Steps</span>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">📱</div>
+        <h3>Social Media Scheduling</h3>
+        <p>Add a row in Google Sheets → AI writes the caption → Buffer schedules the post. Full social on autopilot.</p>
+        <span class="service-tag">Google Sheets · Buffer · AI</span>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">📊</div>
+        <h3>Reporting & Data Pipelines</h3>
+        <p>Weekly sales or lead reports auto-generated from your data — charts, summaries, delivered to your inbox.</p>
+        <span class="service-tag">Python · Pandas · Sheets API</span>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🤖</div>
+        <h3>Custom AI Workflows</h3>
+        <p>Need something specific? We map your process, design a custom Zap with AI steps, and build it around your tools.</p>
+        <span class="service-tag">Custom · Zapier AI · Any Tool</span>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">📋</div>
+        <h3>Full Documentation & Handover</h3>
+        <p>Every workflow comes with a Loom walkthrough and written docs — so you own it completely after we're done.</p>
+        <span class="service-tag">Loom · Docs · Training</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="howitworks">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-tag">The Process</div>
+      <h2 class="section-title">From audit to automation<br>in under a week.</h2>
+      <p class="section-sub">We keep it lean. No jargon, no endless calls — just a clear process that gets you live fast.</p>
+    </div>
+
+    <div class="steps-wrap reveal">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div>
+          <h3>Free Automation Audit</h3>
+          <p>We look at your current workflow and identify exactly which tasks are wasting the most time — no cost, no commitment.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div>
+          <h3>We Design the Flow</h3>
+          <p>We map out the automation step-by-step and show you exactly how it will work before building anything.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div>
+          <h3>We Build It In Your Account</h3>
+          <p>Everything is built inside your own Zapier and Google Workspace — you own it from day one, no vendor lock-in.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div>
+          <h3>Handover & You're Live</h3>
+          <p>We record a Loom walkthrough, hand over full docs, and your automation runs 24/7 without you lifting a finger.</p>
+        </div>
+      </div>
+
+      <!-- Flow diagram -->
+      <div class="flow-diagram">
+        <div class="flow">
+          <div class="flow-node">
+            <div class="fn-icon">📝</div>
+            <div class="fn-label">Trigger</div>
+            <div class="fn-title">Form Submit</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node">
+            <div class="fn-icon">📊</div>
+            <div class="fn-label">Store</div>
+            <div class="fn-title">Google Sheets</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node">
+            <div class="fn-icon">🤖</div>
+            <div class="fn-label">AI Step</div>
+            <div class="fn-title">Generate Summary</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node">
+            <div class="fn-icon">📧</div>
+            <div class="fn-label">Notify</div>
+            <div class="fn-title">Gmail Alert</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node">
+            <div class="fn-icon">⏱️</div>
+            <div class="fn-label">Delay</div>
+            <div class="fn-title">3 Days</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node">
+            <div class="fn-icon">🔁</div>
+            <div class="fn-label">Follow-up</div>
+            <div class="fn-title">Auto Email</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-tag">Pricing</div>
+      <h2 class="section-title">Simple. Transparent.<br>No surprises.</h2>
+      <p class="section-sub">One-time build fee. You own everything after. No monthly retainer unless you want one.</p>
+    </div>
+
+    <div class="pricing-grid reveal">
+      <div class="pricing-card">
+        <div class="plan-badge">Starter</div>
+        <div class="plan-name">Single Automation</div>
+        <div class="plan-price">₹1,999 <span>one-time</span></div>
+        <div class="plan-desc">Perfect for one focused workflow — ideal first step for any business.</div>
+        <ul class="plan-features">
+          <li>1 custom Zapier workflow</li>
+          <li>Up to 5 automation steps</li>
+          <li>Basic AI step included</li>
+          <li>Loom handover video</li>
+          <li>1 round of revisions</li>
+        </ul>
+        <a href="#contact" class="plan-btn ghost">Get Started</a>
+      </div>
+
+      <div class="pricing-card featured">
+        <div class="plan-badge">Most Popular</div>
+        <div class="plan-name">Business Bundle</div>
+        <div class="plan-price">₹4,999 <span>one-time</span></div>
+        <div class="plan-desc">3 automations built together — lead capture, follow-up, and reporting.</div>
+        <ul class="plan-features">
+          <li>3 custom Zapier workflows</li>
+          <li>Multi-step AI pipelines</li>
+          <li>Google Workspace integration</li>
+          <li>Full written documentation</li>
+          <li>Loom walkthrough video</li>
+          <li>2 weeks post-build support</li>
+        </ul>
+        <a href="#contact" class="plan-btn primary">Get Started →</a>
+      </div>
+
+      <div class="pricing-card">
+        <div class="plan-badge">Custom</div>
+        <div class="plan-name">Enterprise / Custom</div>
+        <div class="plan-price">Let's talk <span></span></div>
+        <div class="plan-desc">Complex workflows, multiple departments, or an ongoing automation partner.</div>
+        <ul class="plan-features">
+          <li>Unlimited automation scope</li>
+          <li>Custom AI prompt engineering</li>
+          <li>Python data pipelines</li>
+          <li>Monthly retainer available</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="#contact" class="plan-btn ghost">Contact Us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="contact-wrap">
+      <div class="reveal">
+        <div class="section-tag">Get In Touch</div>
+        <div class="contact-info">
+          <h2>Let's automate<br>your business.</h2>
+          <p>Drop us a message and we'll get back within 24 hours. First audit is always free — no commitment needed.</p>
+
+          <div class="contact-detail">
+            <div class="icon">📧</div>
+            <div>
+              <div class="cd-text">Email</div>
+              <div class="cd-val">vanshrawat334@gmail.com</div>
+            </div>
+          </div>
+          <div class="contact-detail">
+            <div class="icon">📍</div>
+            <div>
+              <div class="cd-text">Location</div>
+              <div class="cd-val">Delhi, India</div>
+            </div>
+          </div>
+          <div class="contact-detail">
+            <div class="icon">⚡</div>
+            <div>
+              <div class="cd-text">Response Time</div>
+              <div class="cd-val">Within 24 hours</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-form reveal">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Your Name</label>
+            <input type="text" placeholder="Rahul Sharma" />
+          </div>
+          <div class="form-group">
+            <label>Business Name</label>
+            <input type="text" placeholder="Your Business" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" placeholder="rahul@yourbusiness.com" />
+        </div>
+        <div class="form-group">
+          <label>What do you want to automate?</label>
+          <select>
+            <option value="" disabled selected>Select a service</option>
+            <option>Lead Capture & CRM</option>
+            <option>Invoice & Follow-Ups</option>
+            <option>Social Media Scheduling</option>
+            <option>Reporting & Data Pipelines</option>
+            <option>Custom AI Workflow</option>
+            <option>Not sure — I need an audit</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Tell us about your process</label>
+          <textarea placeholder="Briefly describe what you're doing manually right now..."></textarea>
+        </div>
+        <button class="submit-btn">Send Message →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Auto<span>myx</span></div>
+  <p>© 2026 Automyx · Delhi, India · Built by Vansh Rawat</p>
+  <div class="footer-links">
+    <a href="#services">Services</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Form submit (visual only)
+  document.querySelector('.submit-btn').addEventListener('click', () => {
+    const btn = document.querySelector('.submit-btn');
+    btn.textContent = '✓ Message Sent!';
+    btn.style.background = '#16a34a';
+    setTimeout(() => {
+      btn.textContent = 'Send Message →';
+      btn.style.background = '';
+    }, 3000);
+  });
+</script>
+
+</body>
+</html>
